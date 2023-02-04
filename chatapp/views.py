@@ -1,6 +1,6 @@
 import json
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import ChatappUser
@@ -16,6 +16,15 @@ def get_user(request, user_id):
         'id':user_id,
     }
     return JsonResponse(data)
+
+@csrf_exempt
+def create_message(request):
+    datas = json.loads(request.body)
+
+    chatappUser_id = datas['chatappUser_id']
+    message = datas['message']
+    ChatappMessage.objects.create(sendername=ChatappUser.objects.get(id=chatappUser_id), message=message)
+    return HttpResponse('message登録完了！')
 
 def get_message(request):
     messages = ChatappMessage.objects.all()
