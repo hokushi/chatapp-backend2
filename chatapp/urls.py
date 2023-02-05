@@ -1,17 +1,12 @@
 from django.urls import path
-from django.http.response import HttpResponse
 from . import views
 
 app_name = 'chatapp'
 
-def chatapp_like_func(request):
-    # chatappにいいねをする機能
-    return HttpResponse('いいねしました')
 
 urlpatterns = [
-    path('like', chatapp_like_func),
+    path('message', views.message), # ここにGETでmessage一覧、POSTでmessage作成
+    path('message/<int:message_id>', views.message_detail), # PUTでmessage更新、DELETEでmessage削除
     path('get_user/<int:user_id>', views.get_user),
-    path('create_message', views.create_message),
-    path('get_message', views.get_message),
     path('get_messages_of_user/<int:user_id>', views.get_messages_of_user),
 ]
