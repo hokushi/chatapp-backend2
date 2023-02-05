@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import ChatappUser
 from .models import ChatappMessage
+# localtime
+from django.utils import timezone
 
 # Create your views here.
 
@@ -34,6 +36,8 @@ def get_message(request):
             'message': message.message,
             'sendername': message.sendername.name,
             'sendername_id': message.sendername.id,
+            'created_at': [timezone.localtime(message.created_at).hour,
+                           timezone.localtime(message.created_at).minute,]
         })
     return JsonResponse(data, safe=False)
 
