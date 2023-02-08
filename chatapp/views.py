@@ -15,7 +15,7 @@ def get_user(request, user_id):
     return JsonResponse(data)
 
 @csrf_exempt
-def message(request,user_id):
+def message(request):
     if request.method == 'GET':
         messages = ChatappMessage.objects.all()
         data = []
