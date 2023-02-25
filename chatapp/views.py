@@ -31,7 +31,8 @@ def message(request):
                 'created_at': [timezone.localtime(message.created_at).month,
                                timezone.localtime(message.created_at).day,
                                timezone.localtime(message.created_at).hour,
-                               timezone.localtime(message.created_at).minute,]
+                               timezone.localtime(message.created_at).minute,
+                               ]
             })
         return JsonResponse(data, safe=False)
 
