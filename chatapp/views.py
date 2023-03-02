@@ -69,6 +69,7 @@ class MessageView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        #classの実体化、インスタンスにしている
         serializer = MessagePostSerializer(data=request.data)
         # serializer.is_valid()でバリデーションを行う
         serializer.is_valid(raise_exception=True)
