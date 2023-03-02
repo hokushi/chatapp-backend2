@@ -8,6 +8,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .serializers import MessagePostSerializer, MessageGetSerializer
 
 
 def get_user(request, user_id):
@@ -68,11 +69,14 @@ class MessageView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        datas = request.data
-        chatappUser_id = datas['chatappUser_id']
-        message = datas['message']
+        serializer = MessagePostSerializer(data=request.data)
+        # serializer.is_valid()でバリデーションを行う
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        """
         ChatappMessage.objects.create(
-            sendername=ChatappUser.objects.get(id=chatappUser_id), message=message)
+            sendername=ChatappUser.objects.get(id=serializer.validated_data["chatappUser_id"]), message=serializer.validated_data["message"])
+        """
         return Response('message登録完了！', status=status.HTTP_201_CREATED)
 
 
@@ -111,16 +115,16 @@ def message_detail(request, message_id):
 class MessageDetailView(APIView):
     def get(self, request, message_id):
         message = ChatappMessage.objects.get(id=message_id)
+        serializer = MessageGetSerializer(message)
+        """
         data = {
             'message': message.message,
-            'sendername': message.sendername.name,
+            'sendername': message.sendername,
             'sendername_id': message.sendername.id,
-            'created_at': [timezone.localtime(message.created_at).month,
-                           timezone.localtime(message.created_at).day,
-                           timezone.localtime(message.created_at).hour,
-                           timezone.localtime(message.created_at).minute,]
+            'created_at': message.created_at,
         }
-        return Response(data, status=status.HTTP_200_OK)
+        """
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, message_id):
         datas = request.data
