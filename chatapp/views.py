@@ -14,6 +14,16 @@ def get_user(request, user_id):
     }
     return JsonResponse(data)
 
+def get_users(request):
+    users = ChatappUser.objects.all()
+    data = []
+    for user in users:
+        data.append({
+            'name': user.name,
+            'id': user.id,
+        })
+    return JsonResponse(data, safe=False)
+
 
 @csrf_exempt
 def message(request):
