@@ -14,15 +14,24 @@ def get_user(request, user_id):
     }
     return JsonResponse(data)
 
-def get_users(request):
-    users = ChatappUser.objects.all()
-    data = []
-    for user in users:
-        data.append({
-            'name': user.name,
-            'id': user.id,
-        })
-    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def user(request):
+    if request.method == 'GET':
+        users = ChatappUser.objects.all()
+        data = []
+        for user in users:
+            data.append({
+                'name': user.name,
+                'id': user.id,
+            })
+        return JsonResponse(data, safe=False)
+
+    if request.method == 'POST':
+        datas = json.loads(request.body)
+        name = datas['name']
+        ChatappUser.objects.create(name=name)
+        return HttpResponse('user登録完了！')
 
 
 @csrf_exempt
