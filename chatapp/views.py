@@ -34,13 +34,13 @@ def message(request):
         for message in messages:
             # message: ChatappMessage
             data.append({
-                'message': { "text": message.message, "id": message.id },
-                'sendername': message.sendername.name,
-                'sendername_id': message.sendername.id,
-                'created_at': [timezone.localtime(message.created_at).month,
-                               timezone.localtime(message.created_at).day,
-                               timezone.localtime(message.created_at).hour,
-                               timezone.localtime(message.created_at).minute,
+                'message': { "text": message.content, "id": message.id },
+                'sendername': message.user.username,
+                'room': message.room.name,
+                'created_at': [timezone.localtime(message.timestamp).month,
+                               timezone.localtime(message.timestamp).day,
+                               timezone.localtime(message.timestamp).hour,
+                               timezone.localtime(message.timestamp).minute,
                                ]
             })
         return JsonResponse(data, safe=False)
@@ -60,13 +60,13 @@ def message_detail(request, message_id):
     if request.method == 'GET':
         message = Message.objects.get(id=message_id)
         data = {
-            'message': message.message,
-            'sendername': message.sendername.name,
-            'sendername_id': message.sendername.id,
-            'created_at': [timezone.localtime(message.created_at).month,
-                           timezone.localtime(message.created_at).day,
-                           timezone.localtime(message.created_at).hour,
-                           timezone.localtime(message.created_at).minute,]
+            'message': message.content,
+            'sendername': message.user,
+            'room': message.room,
+            'created_at': [timezone.localtime(message.timestamp).month,
+                           timezone.localtime(message.timestamp).day,
+                           timezone.localtime(message.timestamp).hour,
+                           timezone.localtime(message.timestamp).minute,]
         }
         return JsonResponse(data)
 
